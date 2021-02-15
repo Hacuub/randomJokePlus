@@ -41,20 +41,33 @@ const jokes = [
   },
 ];
 
+//  found online at:
+//  https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
+
 // 6 - this will return a random number no bigger than `max`, as a string
 // we will also doing our query parameter validation here
-const getRandomJokeJSON = () => {
-  const number = Math.floor(Math.random() * 10);
-  const responseObj = {
-    timestamp: new Date(),
-    q: jokes[number].q,
-    a: jokes[number].a,
-  };
-  return JSON.stringify(responseObj);
+const getRandomJokesJSON = (max = 1) => {
+  let max2 = Number(max);
+  max2 = !max2 ? 1 : max2;
+  max2 = max2 < 1 ? 1 : max2;
+  max2 = max2 > jokes.length ? jokes.length : max2;
+  shuffleArray(jokes);
+  const newJokes = [];
+  for (let i = 0; i < max2; i++) {
+    newJokes[i] = jokes[i];
+  }
+  return JSON.stringify(newJokes);
 };
-const getRandomJokeResponse = (request, response) => {
+
+const getRandomJokeResponse = (request, response, params) => {
   response.writeHead(200, { 'Content-Type': 'application/json' });
-  response.write(getRandomJokeJSON());
+  response.write(getRandomJokesJSON(params));
   response.end();
 };
 
