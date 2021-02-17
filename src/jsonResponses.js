@@ -65,9 +65,31 @@ const getRandomJokesJSON = (max = 1) => {
   return JSON.stringify(newJokes);
 };
 
-const getRandomJokeResponse = (request, response, params) => {
-  response.writeHead(200, { 'Content-Type': 'application/json' });
-  response.write(getRandomJokesJSON(params));
+const getRandomJokesXML = (max = 1) => {
+  let max2 = Number(max);
+  max2 = !max2 ? 1 : max2;
+  max2 = max2 < 1 ? 1 : max2;
+  max2 = max2 > jokes.length ? jokes.length : max2;
+  shuffleArray(jokes);
+  const newJokes = [];
+  for (let i = 0; i < max2; i++) {
+    newJokes[i] = jokes[i];
+  }
+  const xmlJokes = [];
+  for (let i = 0; i < max2; i++) {
+    xmlJokes[i] = `<joke><q>${newJokes[i].q}</q><a>${newJokes[i].a}</a></joke>`;
+  }
+  return `<jokes>${xmlJokes}</jokes`;
+};
+
+const getRandomJokeResponse = (request, response, params, type) => {
+  if (type.includes("text/xml")) {
+    response.writeHead(200, { 'Content-Type': 'text/xml' });
+    response.write(getRandomJokesXML(params));
+  } else {
+    response.writeHead(200, { 'Content-Type': 'application/json' });
+    response.write(getRandomJokesJSON(params));
+  }
   response.end();
 };
 
