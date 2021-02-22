@@ -50,6 +50,11 @@ function shuffleArray(array) {
   }
 }
 
+// ALWAYS GIVE CREDIT - in your code comments and documentation
+// Source: https://stackoverflow.com/questions/2219526/how-many-bytes-in-a-javascript-string/29955838
+// Refactored to an arrow function by ACJ
+const getBinarySize = string => Buffer.byteLength(string, 'utf8');
+
 // 6 - this will return a random number no bigger than `max`, as a string
 // we will also doing our query parameter validation here
 const getRandomJokesJSON = (max = 1) => {
@@ -84,14 +89,27 @@ const getRandomJokesXML = (max = 1) => {
 
 const getRandomJokeResponse = (request, response, params, type) => {
   if (type.includes('text/xml')) {
-    response.writeHead(200, { 'Content-Type': 'text/xml' });
     if (request.method !== 'HEAD') {
+      response.writeHead(200, { 
+        'Content-Type': 'text/xml',
+        'Content-Length': getBinarySize(getRandomJokesXML(params))
+      }
+     );
+    }else{
+      response.writeHead(200, { 'Content-Type': 'text/xml' });
       response.write(getRandomJokesXML(params));
     }
   } else {
-    response.writeHead(200, { 'Content-Type': 'application/json' });
+    response.writeHead(200, { 
+      'Content-Type': 'application/json',
+      'Content-Length': getBinarySize(getRandomJokesJSON(params))
+      }
+    );
     if (request.method !== 'HEAD') {
       response.write(getRandomJokesJSON(params));
+    }
+    else{
+
     }
   }
   response.end();
