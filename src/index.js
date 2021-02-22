@@ -17,9 +17,11 @@ const port = process.env.PORT || process.env.NODE_PORT || 3000;
 // note that in this course we'll be using arrow functions 100% of the time in our server-side code
 
 const urlStruct = {
-  '/random-joke': jsonHandler.getRandomJokeResponse,
-  '/random-jokes': jsonHandler.getRandomJokeResponse,
+  GET: {
+   '/random-joke': jsonHandler.getRandomJokeResponse,
+   '/random-jokes': jsonHandler.getRandomJokeResponse,
   notFound: htmlHandler.get404Response,
+  },
 };
 
 const onRequest = (request, response) => {
@@ -29,7 +31,7 @@ const onRequest = (request, response) => {
   const { limit } = params;
   let acceptedTypes = request.headers.accept && request.headers.accept.split(',');
   acceptedTypes = acceptedTypes || [];
-
+  
   if (urlStruct[pathname]) {
     urlStruct[pathname](request, response, limit, acceptedTypes);
   } else {

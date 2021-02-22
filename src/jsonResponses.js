@@ -85,10 +85,14 @@ const getRandomJokesXML = (max = 1) => {
 const getRandomJokeResponse = (request, response, params, type) => {
   if (type.includes("text/xml")) {
     response.writeHead(200, { 'Content-Type': 'text/xml' });
-    response.write(getRandomJokesXML(params));
+    if(request.method !== "HEAD"){
+      response.write(getRandomJokesXML(params));
+    }
   } else {
     response.writeHead(200, { 'Content-Type': 'application/json' });
-    response.write(getRandomJokesJSON(params));
+    if(request.method !== "HEAD"){
+      response.write(getRandomJokesJSON(params));
+    }
   }
   response.end();
 };
