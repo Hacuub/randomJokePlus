@@ -17,11 +17,9 @@ const port = process.env.PORT || process.env.NODE_PORT || 3000;
 // note that in this course we'll be using arrow functions 100% of the time in our server-side code
 
 const urlStruct = {
-  GET: {
-    '/random-joke': jsonHandler.getRandomJokeResponse,
-    '/random-jokes': jsonHandler.getRandomJokeResponse,
-    notFound: htmlHandler.get404Response,
-  },
+  '/random-joke': jsonHandler.getRandomJokeResponse,
+  '/random-jokes': jsonHandler.getRandomJokeResponse,
+  notFound: htmlHandler.get404Response,
 };
 
 const onRequest = (request, response) => {
